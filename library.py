@@ -8,9 +8,43 @@ library = [
     "название": "Введение в Python. Том 2",
     "автор": "Марк Лутц",
     "год": 2023
+    },
+    {
+    "название": "Введение в Python. Том 3",
+    "автор": "Марк Лутц",
+    "год": 2023
     }
 
 ]
+def show_options(options):
+    for num, option in enumerate(options):
+        print(f"{num}. {option}")
+
+def visit_hub():
+    text = "вы на главной странице библиотеки "
+    options = [
+        "показать книги",
+        "добавить книгу в библиотеку",
+        "удалить книгу",
+        "найти книгу по номеру",
+        "найти книгу по автору, году, названию"
+        ]
+    print("")
+    print(text)
+    show_options(options)
+    if options == 1:
+        return show_books()
+    elif options == 2:
+        return add_book()
+    elif options == 3:
+        return remove_book()
+    elif options == 4:
+        return search_by_number()
+    elif options == 5:
+        return search_book_by_key(user_key)
+    else:
+        print("нет такого варианта")
+    input("\n нажмите энтер для продолжения")
 
 
 def show_books():
@@ -99,29 +133,53 @@ def search_by_number():
 
     num = input("введите порядковый номер книги для поиска её в библиотеке: ")
 
-    if num.isdigit():
-       num = int(num)
-    else:
-       print("Вводите номер который больше нуля!")
-       return
+    if  not num.isdigit():
+        print("Номер должен быть числом")
+        return
+    num = int(num)
 
     idx = num - 1
 
-    if idx < 0 or idx >= len(library):
-        print("нет книги с таким номером!")
+    if idx < 0:
+        print("число должно быть положительным")
+        return
+    if idx >= len(library):
+        print("нет книги с таким числом")
         return
 
+    book = library[idx]
+
     print(f"номер на полке:, {num}")
-    print(f"название:, {library[idx]['название']}")
-    print(f"автор:, {library[idx]['автор']}")
-    print(f"год:, {library[idx]['год']}")
+    print(f"название:, {book['название']}")
+    print(f"автор:, {book['автор']}")
+    print(f"год:, {book['год']}")
     print(f"")
 
-
-
-def search_by_title():
+def search_book_by_key(user_key: str) -> None:
+    """
+    показывает на экране книгу если находит ее по порядковому номеру  
+    """
     if not library:
         print("В библиотеке книг нет!")
         return
-show_books()
-search_by_number()
+
+
+    user_value = input(f"введите {user_key}: ")
+
+    if not user_value:
+        print("нет данных для поиска")
+        return
+    if user_key == "год":
+        if user_value.isdigit():
+            user_value = int(user_value)
+
+    for book in library:
+        if book[user_key] == user_value:
+            print(f"номер на полке:, {library.index(book) + 1}")
+            print(f"название:, {book['название']}")
+            print(f"автор:, {book['автор']}")
+            print(f"год:, {book['год']}")
+            print(f"")
+        
+
+visit_hub()
