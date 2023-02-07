@@ -14,37 +14,7 @@ library = [
     "автор": "Марк Лутц",
     "год": 2023
     }
-
 ]
-def show_options(options):
-    for num, option in enumerate(options):
-        print(f"{num}. {option}")
-
-def visit_hub():
-    text = "вы на главной странице библиотеки "
-    options = [
-        "показать книги",
-        "добавить книгу в библиотеку",
-        "удалить книгу",
-        "найти книгу по номеру",
-        "найти книгу по автору, году, названию"
-        ]
-    print("")
-    print(text)
-    show_options(options)
-    if options == 1:
-        return show_books()
-    elif options == 2:
-        return add_book()
-    elif options == 3:
-        return remove_book()
-    elif options == 4:
-        return search_by_number()
-    elif options == 5:
-        return search_book_by_key(user_key)
-    else:
-        print("нет такого варианта")
-    input("\n нажмите энтер для продолжения")
 
 
 def show_books():
@@ -96,6 +66,7 @@ def add_book() -> None:
 
     library.append(book)
     print(f"книга {library['название']} успешно добавлена ")
+
 
 def remove_book():
     """
@@ -180,6 +151,40 @@ def search_book_by_key(user_key: str) -> None:
             print(f"автор:, {book['автор']}")
             print(f"год:, {book['год']}")
             print(f"")
-        
 
-visit_hub()
+
+def show_menu():
+    text = "вы на главной странице библиотеки деревни 'Гадюкино'"
+    options = [
+        "Показать все книги",
+        "Добавить книгу",
+        "Удалить книгу",
+        "Найти книгу по порядковому номеру на полке",
+        "Найти книгу по названию",
+        "Найти книгу по году",
+        "Найти книгу по автору",
+        "выйти"
+    ]
+    for num, book in enumerate(library, 1):
+        print("")
+        print(text)
+
+        for num, option in enumerate(options, 1):
+            print(f"{num}. {option}")
+        options =  input("\nВведите номер варианта и нажмите энтер: ")
+        options = int(options)
+        if options == 1:
+            return show_books()
+        elif options == 2:
+            return add_book()
+        elif options == 3:
+            return remove_book()
+        elif options == 4:
+            return search_by_number()
+        elif options == 5:
+            return search_book_by_key("название")
+        elif options == 6:
+            return
+    
+
+show_menu()
