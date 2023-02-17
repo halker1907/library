@@ -1,3 +1,5 @@
+import sys
+import os
 library = [
     {
     "название": "Введение в Python. Том 1",
@@ -22,15 +24,16 @@ def show_books():
         print("В библиотеке книг нет")
         return
 
-    for num, book in enumerate(library, 1):
-        """
-        выводит на экран все книги: номер, автора , год, название.
-        """
-        print(f"номер на полке:, {num}")
-        print(f"название:, {book['название']}")
-        print(f"автор:, {book['автор']}")
-        print(f"год:, {book['год']}")
-        print(f"")
+    for book in library:
+        show_book(book)
+    input("нажмите энтер ")
+    os.system("cls")
+
+
+def show_book(book):
+    print("номер на полке: ", library.index(book) + 1)
+    for k, v in book.items():
+        print(f"{k}: {v}")
 
 
 def add_book() -> None:
@@ -42,21 +45,25 @@ def add_book() -> None:
     if not title:
        print("НЕТ НАЗВАНИЯ!")
        return
+
     author = input("Введите имя автора:")
+
     if not author:
        print("НЕТ АВТОРА!")
        return
+
     year = input("Введите год издания:")
+
     if year.isdigit():
        year = int(year)
     else:
-       print("Вводите цифры!")
+       print("Год должен быть числом!")
        return
 
     book = {
-        "название": title,
-        "автор": author,
-        "год": year,
+    "название": title,
+    "автор": author,
+    "год": year,
     }
     if book in library:
        print("")
@@ -65,7 +72,9 @@ def add_book() -> None:
        return
 
     library.append(book)
-    print(f"книга {library['название']} успешно добавлена ")
+    print(f"книга {book['название']} успешно добавлена ")
+    input("нажмите энтер ")
+    os.system("cls")
 
 
 def remove_book():
@@ -92,7 +101,9 @@ def remove_book():
 
     print(f"книга {library[idx]['название']} была успешно удалена")
     library.pop(idx)
-    
+    input("нажмите энтер ")
+    os.system("cls")
+
 
 def search_by_number():
     """
@@ -125,6 +136,8 @@ def search_by_number():
     print(f"автор:, {book['автор']}")
     print(f"год:, {book['год']}")
     print(f"")
+    input("нажмите энтер ")
+    os.system("cls")
 
 def search_book_by_key(user_key: str) -> None:
     """
@@ -133,7 +146,6 @@ def search_book_by_key(user_key: str) -> None:
     if not library:
         print("В библиотеке книг нет!")
         return
-
 
     user_value = input(f"введите {user_key}: ")
 
@@ -144,47 +156,43 @@ def search_book_by_key(user_key: str) -> None:
         if user_value.isdigit():
             user_value = int(user_value)
 
+    if "название" or "год" or "автор" >= len(library):
+        print("нет такой книги :(")
+        return
+
     for book in library:
         if book[user_key] == user_value:
-            print(f"номер на полке:, {library.index(book) + 1}")
-            print(f"название:, {book['название']}")
-            print(f"автор:, {book['автор']}")
-            print(f"год:, {book['год']}")
-            print(f"")
+            show_book(book)
 
+    input("нажмите энтер ")
+    os.system("cls")
+
+
+def close_library() -> None:
+    """
+    закрывает программу
+    """
+    print("Программа завершена. До скорых встречь!")
+    sys.exit()
 
 def show_menu():
-    text = "вы на главной странице библиотеки деревни 'Гадюкино'"
-    options = [
-        "Показать все книги",
-        "Добавить книгу",
-        "Удалить книгу",
-        "Найти книгу по порядковому номеру на полке",
-        "Найти книгу по названию",
-        "Найти книгу по году",
-        "Найти книгу по автору",
-        "выйти"
-    ]
-    for num, book in enumerate(library, 1):
-        print("")
-        print(text)
+    while True:
+        options = [
+            ("Показать все книги", lambda: show_books()),
+            ("Добавить книгу", lambda: add_book()),
+            ("Удалить книгу", lambda: remove_book()),
+            ("Найти книгу по порядковому номеру на полке", lambda: search_by_number()),
+            ("Найти книгу по названию", lambda: search_book_by_key('название')),
+            ("Найти книгу по году", lambda: search_book_by_key('год')),
+            ("Найти книгу по автору", lambda: search_book_by_key('автор')),
+            ("Bыйти", lambda: close_library()),
+        ]
 
-        for num, option in enumerate(options, 1):
-            print(f"{num}. {option}")
-        options =  input("\nВведите номер варианта и нажмите энтер: ")
-        options = int(options)
-        if options == 1:
-            return show_books()
-        elif options == 2:
-            return add_book()
-        elif options == 3:
-            return remove_book()
-        elif options == 4:
-            return search_by_number()
-        elif options == 5:
-            return search_book_by_key("название")
-        elif options == 6:
-            return
-    
+        for i, option in enumerate(options, start=1):
+            print(i, option[0])
+        option_num = input("введите номер варианта и нажмите энтер ")
+        idx = int(option_num) - 1
+        options[idx][1]()
+        
 
 show_menu()
